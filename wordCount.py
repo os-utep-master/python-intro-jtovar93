@@ -4,7 +4,6 @@
 
 import sys
 import re
-import string
 
 # open input file
 inputFile = open(sys.argv[1], "r")
@@ -19,22 +18,30 @@ dictionary = {}
 for line in inputFile:
 
     # remove newline and remove punctuation
+    line = re.sub(r'[^\w\s]', ' ', line)
     line = line.strip()
-    line = re.sub(r'[^\w\s]', '', line)
 
     # splits to individual words
     wordsInLine = re.split(' ', line)
 
     for word in wordsInLine:
+
+        # to detect if a newline filtered through
+        if word == "":
+            continue
+
         # every word in the line to lowercase
         word = word.lower()
 
         # if word exists in dictionary, ++. if not, add set counter at 1
+        if word not in dictionary:
+            dictionary[word] = 1
+        else:
+            dictionary[word] += 1
 
-        # sort dictionary
+# write dictionary to file by sorted keys
+for key in sorted(dictionary.keys()):
+    outputFile.write(key + " " + str(dictionary[key])+'\n')
 
-        # write dictionary to file
-
-        # close input and output files
-
-        print(word)
+# close input and output files
+outputFile.close()
